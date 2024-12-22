@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szókereső</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #655f66;
+            color: white;
+        }
+        .tabla {
+            display: grid;
+            grid-template-columns: repeat(5, 50px);
+            grid-gap: 5px;
+        }
+        .cella {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            background-color: antiquewhite;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid antiquewhite;
+            font-size: 16px;
+            cursor: pointer;
+            color: black;
+        }
+        .cella.keres {
+            background-color: green;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <p>Találd meg a következő szavakat:</p>
+    <br>
+    <ul>
+        <li>cica</li>
+        <li>kutya</li>
+        <li>kő</li>
+    </ul>
+    <div class="tabla" id="veletlenTabla"></div>
+
+    <script>
+        const szavak = ['cica', 'kő', 'kutya'];
+        let talaltSzavak = [];
+
+        function tablaGeneralasa() {
+            const tabla = document.getElementById('veletlenTabla');
+            const betuk = [
+                'c', 'i', 'c', 'a', 'k',
+                'h', 'm', 'a', 'c', 'u',
+                'k', 'ő', 'k', 'u', 't',
+                'y', 'a', 'y', 'q', 'y',
+                'f', 'p', 'k', 'j', 'a'
+            ];
+
+            let jelenlegiSzo = '';
+            let kijeloltCellek = [];
+
+            betuk.forEach((betu, index) => {
+                const cella = document.createElement('div');
+                cella.className = 'cella';
+                cella.textContent = betu;
+                cella.dataset.index = index;
+
+                cella.addEventListener('mousedown', () => {
+                    jelenlegiSzo = betu;
+                    kijeloltCellek = [cella];
+                    cella.classList.add('keres');
+                });
+
+                cella.addEventListener('mouseover', (event) => {
+                    if (event.buttons === 1) {
+                        jelenlegiSzo += betu;
+                        kijeloltCellek.push(cella);
+                        cella.classList.add('keres');
+                        if (szavak.includes(jelenlegiSzo) && !talaltSzavak.includes(jelenlegiSzo)) {
+                            talaltSzavak.push(jelenlegiSzo);
+                            alert(`Megtaláltad a(z) "${jelenlegiSzo}" szót!`);
+                            if (talaltSzavak.length === szavak.length) {
+                                alert("Gratulálunk, megtaláltad az összes szót!");
+                            }
+                        }
+                    }
+                });
+
+                cella.addEventListener('mouseup', () => {
+                    jelenlegiSzo = '';
+                    kijeloltCellek = [];
+                });
+
+                tabla.appendChild(cella);
+            });
+        }
+
+        tablaGeneralasa();
+    </script>
+</body>
+</html>
